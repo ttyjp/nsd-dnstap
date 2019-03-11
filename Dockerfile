@@ -14,7 +14,7 @@ ARG BIND_VERSION="9.11.6"
 ARG BIND_GPG_ID="0x74BB6B9A4CBB3D38"
 ARG BIND_SHA256_HASH="4499007f3a6b8bba84fc757053caeabf36466d6f7d278baccef9fd109beac6d4"
 
-RUN set -x \
+RUN set -ex \
   && apk add libgcc libevent openssl \
   && apk add --virtual build-dependencies \
       build-base \
@@ -50,6 +50,7 @@ RUN set -x \
   && ./autogen.sh \
   && ./configure \
   && make && make install \
+  && : \
   && : "memo: NSD install" \
   && cd /tmp \
   && wget https://www.nlnetlabs.nl/downloads/nsd/nsd-${NSD_VERSION}.tar.gz \
@@ -62,6 +63,7 @@ RUN set -x \
   && cd nsd-${NSD_VERSION} \
   && ./configure --enable-zone-stats --enable-dnstap \
   && make && make install \
+  && : \
   && : "memo: Use only dig and dnstap-read" \
   && cd /tmp \
   && wget https://ftp.isc.org/isc/bind9/${BIND_VERSION}/bind-${BIND_VERSION}.tar.gz \
@@ -77,37 +79,12 @@ RUN set -x \
   && cp ./bin/dig/dig ./bin/tools/dnstap-read /usr/local/bin/ \
   && apk del build-dependencies \
   && cd /usr/local/lib \
-  && rm -rf \
-      libfstrm.a \
-      libfstrm.la \
-      libprotobuf-c.a \
-      libprotobuf-c.la \
-      libprotobuf-lite.a \
-      libprotobuf-lite.la \
-      libprotobuf-lite.so \
-      libprotobuf-lite.so.17 \
-      libprotobuf-lite.so.17.0.0 \
-      libprotobuf.a \
-      libprotobuf.la \
-      libprotobuf.so \
-      libprotobuf.so.17 \
-      libprotobuf.so.17.0.0 \
-      libprotoc.a \
-      libprotoc.la \
-      libprotoc.so \
-      libprotoc.so.17 \
-      libprotoc.so.17.0.0 \
-      pkgconfig \
-  && cd /usr/local/bin \
-  && rm -rf \
-      protoc \
-      protoc-c \
-      protoc-gen-c \
-  && rm -rf \
+  && rm -rf $(ls | grep -v "libfstrm.so\|libprotobuf-c.so") \
       /tmp/* \
       /root/.gnupg \
       /usr/local/include/* \
       /usr/local/share/* \
-      /var/cache/apk/*
+      /var/cache/apk/* \
+      /usr/local/bin/protoc*
 
 CMD ["sh"]
