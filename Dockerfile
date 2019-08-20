@@ -1,16 +1,17 @@
-FROM alpine:3.9
+FROM alpine:3.10
 
 LABEL maintainer "dorayaki (@ttyjp)"
 
 ARG PROTOBUF_VERSION="3.6.1"
 ARG PROTOBUF_C_VERSION="1.3.1"
-ARG FSTRM_VERSION="0.4.0"
+ARG FSTRM_VERSION="0.5.0"
 
-ARG NSD_VERSION="4.1.26"
+ARG NSD_VERSION="4.2.2"
 ARG NSD_GPG_ID="0x9F6F1C2D7E045F8D"
-ARG NSD_SHA256_HASH="9f8a41431d21034d64b9a910567b201636521b64b6a9947390bf898388dc15f4"
+ARG NSD_SHA256_HASH="83b333940a25fe6d453bcac6ea39edfa244612a879117c4a624c97eb250246fb"
 
 RUN set -ex \
+  && apk -U upgrade \
   && apk add libgcc libevent openssl \
   && apk add --virtual build-dependencies \
       build-base \
