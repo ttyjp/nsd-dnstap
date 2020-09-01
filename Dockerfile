@@ -1,4 +1,4 @@
-FROM alpine:3.11.5
+FROM alpine:3.12
 
 LABEL maintainer "dorayaki (@ttyjp)"
 
@@ -6,9 +6,9 @@ ARG PROTOBUF_VERSION="3.11.4"
 ARG PROTOBUF_C_VERSION="1.3.3"
 ARG FSTRM_VERSION="0.6.0"
 
-ARG NSD_VERSION="4.3.1"
+ARG NSD_VERSION="4.3.2"
 ARG NSD_GPG_ID="0x9F6F1C2D7E045F8D"
-ARG NSD_SHA256_HASH="f4b34ace6651a81386464cc990f046e7328aa2485274fe8743086997129d8987"
+ARG NSD_SHA256_HASH="5b5cee2f80ed451f19e02dee620c71a98a781bd72a55810e0acc925fecaa8329"
 
 RUN set -ex \
   && apk -U upgrade \
@@ -39,11 +39,7 @@ RUN set -ex \
   && cd /tmp/protobuf-c \
   && ./autogen.sh \
   && ./configure \
-  && make \
-  && cd /tmp/protobuf \
-  && make install \
-  && cd /tmp/protobuf-c \
-  && make install \
+  && make && make install \
   && cd /tmp/fstrm \
   && ./autogen.sh \
   && ./configure \
